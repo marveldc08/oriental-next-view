@@ -7,11 +7,13 @@
     ==================================*/
 
     var preloader = $('#preloader');
-    $(window).on('load', function() {
-        setTimeout(function() {
-            preloader.fadeOut('slow', function() { $(this).remove(); });
-        }, 300)
-    });
+    if (typeof window !== 'undefined'){ 
+        $(window).on('load', function() {
+            setTimeout(function() {
+                $('.preloader').fadeOut('slow', function() { $(this).remove(); });
+            }, 300)
+        });
+    }
 
     /*================================
     sidebar collapsing
@@ -96,6 +98,7 @@
     /*================================
     datatable active
     ==================================*/
+    // new DataTable('#dataTable');
     if ($('#dataTable').length) {
         $('#dataTable').DataTable({
             responsive: true

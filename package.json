@@ -10,9 +10,19 @@
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.40",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.0.2",
+    "@mui/x-charts": "^7.28.0",
+    "bootstrap": "^5.3.5",
+    "datatables.net-dt": "^2.2.2",
+    "font-awesome": "^4.7.0",
     "lucide-react": "^0.484.0",
+    "material-ui-popup-state": "^5.3.5",
+    "metismenujs": "^1.4.0",
     "next": "15.2.4",
     "react": "^19.0.0",
+    "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {

@@ -1,11 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
+
+
+
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/dashboard");
+  };
   return (
-    <div className="login-box ptb--100">
+    <div className="login-area login-s2">
+      <div className="container">
+      <div className="login-box ptb--100 " >
       <form>
         <div className="login-form-head">
           <h4>Sign In</h4>
@@ -17,11 +28,11 @@ export default function LoginPage() {
 
         <div className="login-form-body">
           {/* Email Field */}
-          <div className="form-gp">
+          <div className="form-gp ">
             <label htmlFor="exampleInputEmail1">Email address</label>
             <div className="input-container">
               <input type="email" id="exampleInputEmail1" required />
-              <Mail className="input-icon" />
+              <i className="ti-email" />
             </div>
             <div className="text-danger"></div>
           </div>
@@ -31,7 +42,7 @@ export default function LoginPage() {
             <label htmlFor="exampleInputPassword1">Password</label>
             <div className="input-container">
               <input type="password" id="exampleInputPassword1" required />
-              <Lock className="input-icon" />
+              <i className="ti-lock" />
             </div>
             <div className="text-danger"></div>
           </div>
@@ -60,19 +71,25 @@ export default function LoginPage() {
 
           {/* Submit Button */}
           <div className="submit-btn-area">
-            <button id="form_submit" type="submit">
-              Submit <ArrowRight className="ml-1" />
+            {/* <button id="form_submit" type="submit">
+              Submit <i className="ti-arrow-right"/>
+            </button> */}
+            <button id="form_submit" type="button" onClick={handleClick}>
+              Submit <i className="ti-arrow-right" />
             </button>
           </div>
 
           {/* Navigation Link */}
-          <div className="test-navigation">
+          {/* <div className="test-navigation submit-btn-area">
             <Link href="/dashboard">
-              Test Navigate <ArrowRight className="ml-1" />
+              Test Navigate <i className="ti-arrow-right"/>
             </Link>
-          </div>
+          </div> */}
         </div>
       </form>
     </div>
+      </div>
+    </div> 
+
   );
 }

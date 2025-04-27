@@ -56,8 +56,8 @@
 
 .page-container {
     width: 100%;
-    height: 100%;
-    min-height: 100vh;
+    height: auto;
+    min-height: auto;
     padding-left: 280px;
     -webkit-transition: padding-left 0.3s ease 0s;
     transition: padding-left 0.3s ease 0s;
@@ -82,6 +82,7 @@
 .card-body {
     padding: 25.6px;
     padding: 1.6rem;
+
 }
 
 .h-full {
@@ -116,6 +117,10 @@
     transition: all 0.3s ease 0s;
 }
 
+.sidebar-menu a{
+    text-decoration: none;
+}
+
 .sbar_collapsed .sidebar-menu {
     left: -280px;
 }
@@ -129,14 +134,18 @@
 }
 
 .menu-inner {
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
+    overflow: hidden;
     height: 100%;
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
-.slimScrollBar {
+/* .slimScrollBar {
     background: #fff!important;
     opacity: 0.1!important;
-}
+} */
 
 .sidebar-header {
     padding: 19px 32px 20px;
@@ -152,7 +161,7 @@
 }
 
 .metismenu >li >a {
-    padding-left: 32px!important;
+    padding-left: 14px!important;
 }
 .metismenu li a {
     position: relative;
@@ -224,6 +233,13 @@
 
 .metismenu li li a:after {
     top: 6px;
+}
+
+.navLinkLayout{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 /*-------------------- END Sidebar Menu -------------------*/
@@ -953,7 +969,7 @@ table.dbkit-table tr:hover {
 
 table.dbkit-table tr td {
     font-size: 16px;
-    font-weight: 400;
+    /* font-weight: 400; */
     letter-spacing: 0;
     color: #616161;
     min-width: 141px;
@@ -979,6 +995,18 @@ table.dbkit-table tr td {
 .buy img,
 .sell img {
     margin-left: 10px;
+}
+
+.actionBtn{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 13;
+}
+.actionBtn a{
+    width: 100%;
+    margin: 5 0;
 }
 
 /*-------------------- END Market value ------------------- */
@@ -2296,14 +2324,25 @@ table.dataTable thead td {
 
 
 /*-------------------- 23. Login ------------------- */
-
+body
 .login-area {
     background: #F3F8FB;
+    font-family: "https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i";
+}
+.loginBg{
+    background-image: url("../images/mineBg.jpg");
+    background-position-x: left;
+
+    background-repeat: no-repeat;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
 }
 
 .login-box {
-    display: -webkit-box;
-    display: -ms-flexbox;
+    /* display: -webkit-box; */
+    /* display: -ms-flexbox; */
     display: flex;
     min-height: 100vh;
 }
@@ -2318,7 +2357,6 @@ table.dataTable thead td {
 
 .login-form-head {
     text-align: center;
-    background: #8655FC;
     padding: 50px;
 }
 
@@ -2326,12 +2364,14 @@ table.dataTable thead td {
     letter-spacing: 0;
     text-transform: uppercase;
     font-weight: 600;
+    /* font-family: poppins; */
+    font-size: 24px;
     margin-bottom: 7px;
-    color: #fff;
+    color: #444444;
 }
 
 .login-form-head p {
-    color: #fff;
+    color: #444;
     font-size: 14px;
     line-height: 22px;
 }
@@ -2354,7 +2394,7 @@ table.dataTable thead td {
     transition: all 0.3s ease 0s;
 }
 
-.form-gp.focused label {
+.form-gp:hover label {
     top: -15px;
     color: #7e74ff;
 }
@@ -2364,6 +2404,7 @@ table.dataTable thead td {
     height: 30px;
     border: none;
     border-bottom: 1px solid #e6e6e6;
+    background-color: none;
 }
 
 .form-gp input::-webkit-input-placeholder {
@@ -2410,7 +2451,7 @@ table.dataTable thead td {
     border-radius: 40px;
     text-transform: uppercase;
     letter-spacing: 0;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 12px;
     box-shadow: 0 0 22px rgba(0, 0, 0, 0.07);
     -webkit-transition: all 0.3s ease 0s;
