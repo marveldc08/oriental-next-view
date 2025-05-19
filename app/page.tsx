@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import {useState} from "react";
 
 
 
 
 export default function LoginPage() {
   const router = useRouter();
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleClick = () => {
+  const handleSubmit = () => {
     router.push("/dashboard");
   };
   return (
@@ -27,25 +29,34 @@ export default function LoginPage() {
         </div>
 
         <div className="login-form-body">
-          {/* Email Field */}
-          <div className="form-gp ">
-            <label htmlFor="exampleInputEmail1">Email address</label>
-            <div className="input-container">
-              <input type="email" id="exampleInputEmail1" required />
-              <i className="ti-email" />
-            </div>
-            <div className="text-danger"></div>
+
+          <div className={`form-gp ${email ? "active" : ""}`}>
+                <input
+                  type="password"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <i className="ti-email" /> 
+                <label htmlFor="email">Email address</label>
+                <div className="text-danger"></div>
           </div>
 
           {/* Password Field */}
-          <div className="form-gp">
-            <label htmlFor="exampleInputPassword1">Password</label>
-            <div className="input-container">
-              <input type="password" id="exampleInputPassword1" required />
-              <i className="ti-lock" />
-            </div>
-            <div className="text-danger"></div>
-          </div>
+
+          <div className={`form-gp ${password ? "active" : ""}`}>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <i className="ti-lock" />
+                <label htmlFor="password">New Password</label>
+                <div className="text-danger"></div>
+              </div>
 
           {/* Remember Me and Reset Password */}
           <div className="row mb-4 rmber-area">
@@ -70,11 +81,11 @@ export default function LoginPage() {
           </div>
 
           {/* Submit Button */}
-          <div className="submit-btn-area">
+          <div className="submit-btn-area" >
             {/* <button id="form_submit" type="submit">
               Submit <i className="ti-arrow-right"/>
             </button> */}
-            <button id="form_submit" type="button" onClick={handleClick}>
+            <button id="form_submit" type="button" onClick={handleSubmit}>
               Submit <i className="ti-arrow-right" />
             </button>
           </div>
@@ -86,6 +97,7 @@ export default function LoginPage() {
             </Link>
           </div> */}
         </div>
+
       </form>
     </div>
       </div>
