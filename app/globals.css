@@ -218,3 +218,57 @@ a{
   width: 0.75rem;
 }
 
+/* ====================================== */
+.form-gp {
+  margin-bottom: 30px;
+  position: relative;
+  width: 100%;
+}
+
+.form-gp input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  background: transparent;
+  padding: 8px 0;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s;
+}
+
+.form-gp input:focus {
+  border-color: #7e74ff;
+  outline: none;
+}
+
+.form-gp label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  color: #999;
+  font-size: 16px;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.form-gp input:focus + i + label ,
+.form-gp.active label {
+  top: -10px;
+  font-size: 13px;
+  color: #7e74ff;
+}
+
+.submit-btn-area button {
+  background-color: #7e74ff;
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submit-btn-area button:hover {
+  background-color: #5a54cc;
+}

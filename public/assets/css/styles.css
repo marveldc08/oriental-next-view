@@ -2380,23 +2380,24 @@ body
     padding: 50px;
 }
 
-.form-gp {
+/* .form-gp {
     margin-bottom: 25px;
     position: relative;
 }
 
 .form-gp label {
     position: absolute;
+    top: 10px;
     left: 0;
-    top: 0;
     color: #b3b2b2;
-    -webkit-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
+    pointer-events: none;
 }
 
-.form-gp:hover label {
-    top: -15px;
-    color: #7e74ff;
+.form-gp input:focus + label {
+  top: -10px;
+  font-size: 13px;
+  color: #7e74ff;
 }
 
 .form-gp input {
@@ -2404,9 +2405,52 @@ body
     height: 30px;
     border: none;
     border-bottom: 1px solid #e6e6e6;
-    background-color: none;
+    background-color: transparent;
+    transition: border-color 0.3s;
 }
+.form-gp input:focus {
+    border-color: #7e74ff;
+    outline: none;
+  } */
 
+  .form-gp {
+    margin-bottom: 30px;
+    position: relative;
+    width: 100%;
+  }
+  
+  .form-gp input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: transparent;
+    padding: 8px 0;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s;
+  }
+  
+  .form-gp input:focus {
+    border-color: #7e74ff;
+    outline: none;
+  }
+  
+  .form-gp label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    color: #999;
+    font-size: 16px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
+  
+  .form-gp input:focus + label,
+  .form-gp.active label {
+    top: -10px;
+    font-size: 13px;
+    color: #7e74ff;
+  }
 .form-gp input::-webkit-input-placeholder {
     color: #dad7d7;
 }
@@ -2446,8 +2490,8 @@ body
     width: 100%;
     height: 50px;
     border: none;
-    background: #fff;
-    color: #585b5f;
+    background: #2c71da;
+    color: #ffffff;
     border-radius: 40px;
     text-transform: uppercase;
     letter-spacing: 0;
@@ -2459,7 +2503,7 @@ body
 }
 
 .submit-btn-area button:hover {
-    background: #2c71da;
+    background: #0c4aa7;
     color: #ffffff;
 }
 
