@@ -2,13 +2,13 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
 
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const token = req.headers.get("authorization") || "";
 
-    const periodId =  req.nextUrl.searchParams.get("id");
+    const periodId =  req.nextUrl.searchParams.get("id") || params.id;
     const parsedPeriodId = periodId ? parseInt(periodId, 10) : null;
   
     if (!token) {
