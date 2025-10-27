@@ -4,6 +4,7 @@
   "private": true,
   "type":"module",
   "scripts": {
+    "debug-env": "node -p \"process.env.NODE_OPTIONS || 'No NODE_OPTIONS set'\"",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
