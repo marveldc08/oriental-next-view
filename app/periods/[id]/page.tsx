@@ -274,7 +274,7 @@ const PeriodInformationPage = () => {
       setLoading(true);
      
       try {
-        const response = await fetch(`/api/periods/cancel-period?id=${parsedPeriodId}`, {
+        const response = await fetch(`/api/periods/cancel-period/${parsedPeriodId}?id=${parsedPeriodId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
