@@ -141,7 +141,7 @@ export default function LoginPage() {
         
       }
     }
-  }, [decrypted]);
+  }, [decrypted, router, userOnboardData.IsPasswordCreationRequired]);
 
 
 

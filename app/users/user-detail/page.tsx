@@ -49,7 +49,7 @@ export default function UserInformationPage() {
         } catch (error) {
           console.log("Error fetching users:", error);
         }
-      }, [token]);
+      }, [token, userId]);
 
       const getUsers = useCallback(async () => {
         try {
