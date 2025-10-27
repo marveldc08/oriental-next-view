@@ -204,7 +204,7 @@ const ActivityInformation = () => {
           throw error; // Re-throw the error to handle it in the calling function
     
         }
-      }, [token]);
+      }, [parsedTaskId, token]);
 
       const getTaskComments = useCallback(async () => {
         try {
@@ -230,7 +230,7 @@ const ActivityInformation = () => {
           throw error; // Re-throw the error to handle it in the calling function
     
         }
-      }, [token]);
+      }, [parsedTaskId, token]);
 
       const getTaskMilestones = useCallback(async () => {
         try {

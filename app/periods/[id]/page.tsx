@@ -68,7 +68,7 @@ const PeriodInformationPage = () => {
           throw error; // Re-throw the error to handle it in the calling function
     
         }
-      }, [token]);
+      }, [parsedPeriodId, token]);
 
       const getTasks = useCallback(async () => {
         try {

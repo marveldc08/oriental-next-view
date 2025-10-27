@@ -53,7 +53,7 @@ export default function PeriodManagementPage() {
   } catch (error) {
     console.error("error Fetching fields:", error);
   }
-}, [token]);
+}, [setFields, token]);
 
   useEffect(() => {
     if (!token) {
@@ -70,7 +70,7 @@ export default function PeriodManagementPage() {
 
     fetchFields();
 
-  }, [token, getFields]);
+  }, [token, getFields, setFields]);
 
 
   const getPeriods = useCallback(async () => {
