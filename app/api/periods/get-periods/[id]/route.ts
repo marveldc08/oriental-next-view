@@ -1,13 +1,14 @@
 
+import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest) {
 
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const token = req.headers.get("authorization");
-    const periodId = params.id;
-    const parsedPeriodId = periodId || req.nextUrl.searchParams.get("id");
+    const token = req.headers.get("authorization")|| "";
+    const periodId = req.nextUrl.searchParams.get("id");
+    const parsedPeriodId = parseInt(periodId)  
    
 
     if (!token) {
