@@ -1,17 +1,16 @@
 // app/api/users/get-users/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
-
-
-  const userId = params.id;
-
+export async function GET(req: NextRequest) {
 
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const token = req.headers.get("authorization");
+    const userId = req.nextUrl.searchParams.get("id");
+    const parsedUserId = parseInt(userId);
+    console.log("Parsed User ID:", parsedUserId);
 
-    const apiRes = await fetch(`${API_BASE_URL}/api/v1/users/${userId}`, {
+    const apiRes = await fetch(`${API_BASE_URL}/api/v1/users/${parsedUserId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

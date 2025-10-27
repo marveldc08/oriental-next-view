@@ -29,7 +29,7 @@ export default function UserInformationPage() {
 
       const getUser = useCallback(async () => {
         try {
-          const response = await fetch(`/api/users/get-users/${userId}`,{
+          const response = await fetch(`/api/users/get-users/${userId}?id=${userId}`,{
             method: "GET",
             headers:{
               "Content-Type": "application/json",
