@@ -1,7 +1,8 @@
 {
   "build": {
     "env": {
-      "NODE_OPTIONS": ""
+      "NODE_OPTIONS": "",
+       "NODE_VERSION": "20"
     }
   }
 }
