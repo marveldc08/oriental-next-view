@@ -2,15 +2,14 @@
   "name": "oriental-next-view",
   "version": "0.1.0",
   "private": true,
+  "type":"module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "NODE_OPTIONS='' next build",
     "start": "next start",
     "lint": "next lint"
   },
-  "engines": {
-    "node": "20.x"
-  },
+
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.40",
     "@emotion/react": "^11.14.0",
