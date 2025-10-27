@@ -152,11 +152,11 @@ const ActivityInformation = () => {
           throw error; // Re-throw the error to handle it in the calling function
     
         }
-      }, [parsedTaskId, token]);
+      }, [ token]);
 
       const getTask = useCallback(async () => {
         try {
-          const response = await fetch(`/api/periods/tasks/get-period-task?id=${parsedTaskId}`, {
+          const response = await fetch(`/api/periods/tasks/get-period-task/${parsedTaskId}?id=${parsedTaskId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -287,8 +287,8 @@ const ActivityInformation = () => {
         const fetchTask = async () => {
           try {
             const taskData = await getTask();
-       
-            setFetchedTask(taskData.data[0]);
+            console.log("TASK DATA", taskData.data)
+            setFetchedTask(taskData.data);
 
           } catch (error) {
             console.error("Error fetching task:", error);

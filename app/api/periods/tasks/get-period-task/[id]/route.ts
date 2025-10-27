@@ -6,8 +6,9 @@ export async function GET(req: NextRequest,{ params}: { params:  {id: string}}) 
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const token = req.headers.get("authorization");
-    const taskId = params.id;
-    const parsedTaskId = taskId || req.nextUrl.searchParams.get("id");
+    const taskId = req.nextUrl.searchParams.get("id");
+    const parsedTaskId = parseInt(taskId) 
+ 
     
     if (!token) {
       return NextResponse.json({ message: "Authorization token is required" }, { status: 401 });
