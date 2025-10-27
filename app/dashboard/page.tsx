@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 import Link from 'next/link'
 import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
 import Button from '@mui/material/Button';
@@ -7,6 +7,8 @@ import Popover from '@mui/material/Popover';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import Header from '../../components/Header'
 import { PieChart } from '@mui/x-charts/PieChart';
+import { useLocalStorageObject } from '../../hooks/useLocalStorage';
+
 
 
 const uData = [3000, 3460, 3200, 2780, 1490, 2390, 3490];
@@ -22,10 +24,24 @@ const xLabels = [
   'Page G',
 ];
 
-function page() {
+export default function DashboardPage() {
+    const [user, setUser] = useLocalStorageObject("user", null);
+    const [token, setToken] = useLocalStorageObject("token", null);
+    const [userName, setUserName] = useState("");
+
+    useEffect(() => {
+      if (user) {
+        setUserName(`${user.firstName} ${user.lastName}`);
+      } else {
+        console.log("No user data found.");
+      }
+    }, [user]);
+
+  
+  
   return (
     <div className='page-container'>
-      <Header pageName="Dashboard" moduleName="Dashboard" />
+      <Header pageName="Dashboard" moduleName="Dashboard"  userName={userName} />
       <div id="wrapper" >
         <div id="content-wrapper" className="d-flex flex-column">
           <div id="content">
@@ -560,5 +576,3 @@ function page() {
     </div>
   );
 }
-
-export default page

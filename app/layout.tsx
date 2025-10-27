@@ -25,6 +25,15 @@ import Loader from "../components/Loader";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
+// app/layout.tsx or app/layout.jsx
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
+
+
+
 
 
 
@@ -48,6 +57,7 @@ export default function RootLayout({
       <body className={inter.className}>
         {/* loader */}
         <Loader />
+        <ToastContainer position="top-right" autoClose={3000} />
 
         {/* Page Content */}
         <ClientWrapper>

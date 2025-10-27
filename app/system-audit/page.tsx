@@ -1,17 +1,29 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import Header from '../../components/Header';
 import "../../public/assets/css/dataTables.bootstrap4.css" ;
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { useLocalStorageObject } from '../../hooks/useLocalStorage';
 
 const SystemAudit = () => {
+     const [user, setUser] = useLocalStorageObject("user", null);
+      const [token, setToken] = useLocalStorageObject("token", null);
+      const [userName, setUserName] = useState("");
+  
+      useEffect(() => {
+        if (user) {
+          setUserName(`${user.firstName} ${user.lastName}`);
+        } else {
+          console.log("No user data found.");
+        }
+      }, [user]);
   return (
     <div className='page-container'>
-   <Header pageName="System Activity Audit" moduleName="System Audit" />
+   <Header pageName="System Activity Audit" moduleName="System Audit" userName={userName} />
     <div className="row" style={{ width: "100%",padding: "20px"}}>
       <div className="col-xl-12 col-ml-12 col-lg-12 mt-5">
         <div className="card border-left-primary">

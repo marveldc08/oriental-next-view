@@ -6,7 +6,7 @@ table.dataTable {
   max-width: none !important;
   border-collapse: separate !important;
   border-spacing: 0;
-  font-size: 14px !important;
+  font-size: 12px !important;
 }
 table.dataTable td,
 table.dataTable th {
@@ -19,7 +19,7 @@ table.dataTable th.dataTables_empty {
 }
 table.dataTable.nowrap th,
 table.dataTable.nowrap td {
-  white-space: nowrap;
+  white-space: wrap;
 }
 
 div.dataTables_wrapper div.dataTables_length label {
