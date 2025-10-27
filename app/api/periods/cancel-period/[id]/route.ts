@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest,{ params }: { params: { id: string } }) {
+export async function POST(req: NextRequest) {
 
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
