@@ -4,12 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 
-
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const token = req.headers.get("authorization") || "";
 
     const periodId =  req.nextUrl.searchParams.get("id");
+    const parsedPeriodId = periodId ? parseInt(periodId, 10) : null;
   
 
         if (!token) {
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     if (!periodId) {
       return NextResponse.json({ message: "Period ID is required" }, { status: 400 });
     }
-    const apiRes = await fetch(`${API_BASE_URL}/api/v1/periods/${periodId}/cancel`, {
+    const apiRes = await fetch(`${API_BASE_URL}/api/v1/periods/${parsedPeriodId}/cancel`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

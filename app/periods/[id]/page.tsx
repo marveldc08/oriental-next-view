@@ -46,7 +46,7 @@ const PeriodInformationPage = () => {
 
       const getPeriod = useCallback(async () => {
         try {
-          const response = await fetch(`/api/periods/get-periods/${parsedPeriodId}`, {
+          const response = await fetch(`/api/periods/get-periods/${parsedPeriodId}?id=${parsedPeriodId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
