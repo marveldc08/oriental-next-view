@@ -46,8 +46,6 @@ export default function PeriodManagementPage() {
     const data = await response.json();
     if (response.ok) {
       setFields(data.data ?? null);
-    } else {
-      
     }
     return data
   } catch (error) {

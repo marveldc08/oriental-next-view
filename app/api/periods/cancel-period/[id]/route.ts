@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest,{ params }: { params: { id: string } }) {
 
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -11,8 +11,7 @@ export async function POST(req: NextRequest) {
     const periodId =  req.nextUrl.searchParams.get("id");
     const parsedPeriodId = periodId ? parseInt(periodId, 10) : null;
   
-
-        if (!token) {
+    if (!token) {
       return NextResponse.json({ message: "Authorization token is required" }, { status: 401 });
     }
     if (!periodId) {
@@ -24,7 +23,6 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
         "authorization": token
       },
-      
     });
 
     const contentType = apiRes.headers.get("content-type");
