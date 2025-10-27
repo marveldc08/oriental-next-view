@@ -1,0 +1,223 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify"; 
+import { useEffect, useState } from "react";
+import Loader from "../../../components/Loader";
+import { useLocalStorageObject } from "../../../hooks/useLocalStorage";
+
+interface UserOnboardData {
+  "StaffId": string,
+  Name: string,
+  Email: string,
+  Role: string,
+  IsPasswordCreationRequired: boolean
+};
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [decrypted, setDecrypted] = useState<string | null>(null);
+  const [userOnboardData, setUserOnboardData] = useState<UserOnboardData | null>(null);
+   const [loading, setLoading] = useState(false); 
+  const [token, setToken] = useLocalStorageObject("token", null);
+
+  const searchParams = useSearchParams();
+  const encryptedBase64 = searchParams.get("extras");
+
+  useEffect(() => {
+    if (encryptedBase64) {
+     
+      decryptAES256CBC(encryptedBase64)
+        .then(setDecrypted)
+        .catch((err) => console.error("Decryption error:", err));
+    } else {
+      console.log("No parameter found in URL.");
+    }
+  }, [encryptedBase64]);
+
+  // ✅ Proper Base64 normalization
+  function normalizeBase64(base64: string): string {
+    let normalized = base64
+      .replace(/ /g, "+")         // spaces to +
+      .replace(/[^\w+/=]/g, "");  // remove all invalid characters (e.g. ')')
+      
+    const pad = normalized.length % 4;
+    if (pad > 0) {
+      normalized += "=".repeat(4 - pad);
+    }
+    return normalized;
+  }
+
+
+  // ✅ AES-256-CBC decryption function using Web Crypto API
+  async function decryptAES256CBC(encryptedBase64: string) {
+    function hexToBytes(hex: string) {
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+      }
+      return bytes;
+    }
+
+    const secretKeyHex = process.env.NEXT_PUBLIC_SECRET_KEY ;
+    const initiatorVectorHex = process.env.NEXT_PUBLIC_INITIATOR_VECTOR ;
+
+    const secretKeyBytes = hexToBytes(secretKeyHex);
+    const initiatorVectorBytes = hexToBytes(initiatorVectorHex);
+
+    const decodedParam = decodeURIComponent(encryptedBase64);
+    const cleanedBase64 = normalizeBase64(decodedParam);
+
+
+    let encryptedBytes;
+    try {
+      encryptedBytes = Uint8Array.from(atob(cleanedBase64), (c) => c.charCodeAt(0));
+    } catch (e) {
+      console.error("Invalid Base64");
+      throw e;
+    }
+
+    const cryptoKey = await crypto.subtle.importKey("raw", secretKeyBytes, { name: "AES-CBC" }, false, [
+      "decrypt",
+    ]);
+
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      {
+        name: "AES-CBC",
+        iv: initiatorVectorBytes,
+      },
+      cryptoKey,
+      encryptedBytes
+    );
+
+    const decoded = new TextDecoder().decode(decryptedBuffer);
+    return decoded;
+  }
+
+  useEffect(() => {
+    if (decrypted) {
+      try {
+        const userData = JSON.parse(decrypted);
+       console.log(decrypted)
+        // console.log(userData);
+        // console.log("Is object:", typeof userData === "object");
+        // console.log("Name:", userData.Name);
+        // console.log("StaffId:", userData.StaffId);
+
+        setUserOnboardData(userData);
+
+        // ✅ use the freshly parsed object here
+        if (!userData.IsPasswordCreationRequired) {
+          router.push("/login");
+        }
+         
+      } catch (error) {
+        console.error("Error processing decrypted value:", error);
+        
+      }
+    }
+  }, [decrypted]);
+
+
+  const handleSubmit = async(password: string, confirm: string) => {
+    setLoading(true)
+    try {
+       if (!password || !confirm) {
+          toast.warning("Please fill in both password fields.");
+          return;
+        }
+    
+        if (password !== confirm) {
+          toast.error("Passwords do not match.");
+        }
+
+        const staffId = userOnboardData.StaffId;
+        const userName = userOnboardData.Name
+        console.log(userOnboardData)
+
+        const response = await fetch("/api/auth/create-password", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({ staffId, password, userName }),
+    
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+      
+          // setToken(data.data.token ?? null);     
+          console.log(data)
+          
+          toast.success("Successfully created password")
+          // router.push("/login");
+          
+        } else {
+          throw new Error(data.message || "Login failed");
+          setLoading(false)
+        }
+        
+        // router.push("/login");
+    } catch (error) {
+      console.error("Error during form submission:", error);
+      toast.error("Error during form submission:")
+      setLoading(false)
+      
+    }
+   
+  };
+
+  return (
+    <div className="login-area login-s2">
+      {loading && <Loader />}
+      <div className="container">
+        <div className="login-box ptb--100">
+          <form>
+            <div className="login-form-head">
+              <h4>Create New Password</h4>
+              <p>Set a secure password for your account.</p>
+            </div>
+
+            <div className="login-form-body">
+              <div className={`form-gp ${password ? "active" : ""}`}>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <i className="ti-lock" />
+                <label htmlFor="password">New Password</label>
+              </div>
+
+              <div className={`form-gp ${confirm ? "active" : ""}`}>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  required
+                />
+                <i className="ti-lock" />
+                <label htmlFor="confirmPassword">Confirm Password</label>
+              </div>
+
+              <div className="submit-btn-area">
+                <button type="button" className="btn btn-primary btn-block" disabled={loading} onClick={() => handleSubmit(password, confirm)}>
+                  {loading ? "Creating..." : "Create Password"}  <i className="ti-check" />
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -98,6 +98,62 @@
     padding: 0 30px 50px;
 }
 
+.btn-view:hover { color: blue; }
+.btn-update:hover { color: gold; }
+.btn-remove:hover { color: red; }
+
+.status-badge {
+  display: inline-block;
+  justify-self: center;
+  align-self: center;
+  padding: 2px 8px;
+  border-radius: 959px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: white;
+}
+
+/* Status-based colors */
+.status-badge.new {
+  background-color: #007bff; /* blue */
+}
+
+.status-badge.started {
+  background-color: #ffc107; /* yellow/gold */
+  color: #000;
+}
+
+.status-badge.cancelled {
+  background-color: #dc3545; /* red */
+}
+
+.status-badge.completed {
+  background-color: #28a745; /* green */
+}
+
+.modern-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f9fafb;
+  font-size: 0.95rem;
+  color: #333;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+.modern-textarea:focus {
+  border-color: #3b82f6; /* nice blue focus color */
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+
+
 /*------------------------- END Core Css -------------------*/
 
 
@@ -2571,7 +2627,7 @@ body
     position: absolute;
     height: 206%;
     width: 97%;
-    background: #fcfcff;
+    background: #f0f0f9;
     border-radius: 50%;
     left: -42%;
     z-index: -1;

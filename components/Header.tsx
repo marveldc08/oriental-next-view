@@ -4,11 +4,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import MetisMenu from 'metismenujs';
+import Loader from './Loader';
 
-export default function Header({ pageName, moduleName }: { pageName: string, moduleName: string }) {
+export default function Header({ pageName, moduleName, userName }: { pageName: string, moduleName: string, userName?: string }) {
   const menuRef = useRef<HTMLUListElement>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [menuName, setMenuName] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false); 
 
   const toggleMenu = (menuName: string)=>{
     setMenuName((prev)=> (prev === menuName ? null : menuName))
@@ -31,6 +33,7 @@ export default function Header({ pageName, moduleName }: { pageName: string, mod
 
   return (
     <div>
+      {/* {loading && <Loader />} */}
       {/* Sidebar */}
       <div className={`sidebar-menu ${sidebarOpen ? '' : 'collapsed'}`}>
         <div className="sidebar-header">
@@ -43,7 +46,7 @@ export default function Header({ pageName, moduleName }: { pageName: string, mod
             <nav>
               <ul className="metismenu" id="menu" ref={menuRef}>
                 <li className="active">
-                  <Link href="/dashboard"><i className="ti-dashboard"></i><span>Dashboard</span></Link>
+                  <Link href="/dashboard" ><i className="ti-dashboard"></i><span>Dashboard</span></Link>
                 </li>
                 <li>
                  <div onClick={()=> toggleMenu("Configuration")}>
@@ -55,9 +58,9 @@ export default function Header({ pageName, moduleName }: { pageName: string, mod
                  </div>
                  {menuName === "Configuration" && (
                    <ul >
-                      <li><Link href="/time-parameters">Setup Time Parameters</Link></li>
-                      <li><Link href="/activities">Setup Activities</Link></li>
-                      <li><Link href="/role-management">Setup Authorization</Link></li>
+                      <li><Link href="/configurations/time-parameters">Setup Time Parameters</Link></li>
+                      <li><Link href="/configurations/activities">Setup Activities</Link></li>
+                      <li><Link href="/configurations/role-management">Setup Authorization</Link></li>
                     </ul>
                  )}
                 </li>
@@ -65,13 +68,13 @@ export default function Header({ pageName, moduleName }: { pageName: string, mod
                 <div onClick={()=> toggleMenu("User")}>
                   <a href="#" style={{display:"flex", justifyContent:"space-between", alignItems:"center"}} >
                     <div><i className="ti-user"></i><span>User Management</span></div>
-                  <i className={`${menuName === 'Usre' ? 'ti-angle-up' : 'ti-angle-down'}`} style={{fontSize:"15px"}} />
+                  <i className={`${menuName === 'User' ? 'ti-angle-up' : 'ti-angle-down'}`} style={{fontSize:"15px"}} />
                   </a>
                 </div>
                 {menuName === "User" && (
                   <ul>
-                    <li><Link href="/user-setup">All Users</Link></li>
-                    <li><Link href="/user-detail">Search User</Link></li>
+                    <li><Link href="/users/user-setup">All Users</Link></li>
+                    <li><Link href="/users/user-detail">Search User</Link></li>
                   </ul>
                 )}
 
@@ -85,7 +88,7 @@ export default function Header({ pageName, moduleName }: { pageName: string, mod
                 </div>
                 {menuName === "Lifting" && (
                   <ul>
-                    <li><Link href="/period-setup">Manage Periods</Link></li>
+                    <li><Link href="/periods/period-setup">Manage Periods</Link></li>
                 </ul>
                 )}
                 </li>
@@ -98,8 +101,8 @@ export default function Header({ pageName, moduleName }: { pageName: string, mod
                 </div>
                 {menuName === "Reporting" && (
                   <ul>
-                    <li><Link href="/reports">Reports</Link></li>
-                    <li><Link href="/report-setup">Fill Lifting Report</Link></li>
+                    <li><Link href="/reporting/manage-reports">Manage Reports</Link></li>
+                    <li><Link href="/reporting/generate-report">Generate Report</Link></li>
                   </ul>
                 )}
 
@@ -179,7 +182,7 @@ export default function Header({ pageName, moduleName }: { pageName: string, mod
             <div className="user-profile pull-right">
               <Image className="avatar user-thumb" src="/assets/images/author/avatar.png" alt="avatar" width={40} height={40} />
               <h4 className="user-name dropdown-toggle" data-toggle="dropdown">
-                Dun-Smart <i className="fa fa-angle-down"></i>
+                {userName} <i className="fa fa-angle-down"></i>
               </h4>
               <div className="dropdown-menu">
                 <a className="dropdown-item" href="#">Message</a>
