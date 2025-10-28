@@ -9,15 +9,37 @@ import router from 'next/router';
 import { toast } from 'react-toastify';
 import Loader from "../../../components/Loader";
 
+
+      interface Periods  {
+          id: number;
+          name: string;
+          description: string;
+          field: { name: string };
+          startDate: string;
+          endDate: string;
+          status: string;
+          dateCreated: string;
+          // add other properties if needed
+      };
 const ReportPage = () => {
-     const [user, setUser] = useLocalStorageObject("user", null);
+      type User = {
+        id: number;
+        firstName: string;
+        lastName: string;
+        emailAddress: string;
+        // add other properties as needed
+      };
+  
+     const [user, setUser] = useLocalStorageObject<User | null>("user", null);
       const [token, setToken] = useLocalStorageObject("token", null);
       const [userName, setUserName] = useState("");
       const [showInitiateReportModal, setShowInitiateReportModal] = useState(false);
-      const [periods, setPeriods] = useState([]);
+      const [periods, setPeriods] = useState<Periods[]>([]);
       const [fromDate, setFromDate] = useState<string | null>(null);
       const [toDate, setToDate] = useState<string | null>(null);
       const [loading, setLoading] = useState(false);
+
+
   
       useEffect(() => {
         if (user) {
@@ -47,7 +69,12 @@ const ReportPage = () => {
             return data;
           } catch (error) {
             console.error("Error fetching periods:", error);
-            console.error("Error fetching periods:", error.message, error.stack);
+
+            if (error instanceof Error) {
+              console.error("Error fetching periods:", error.message, error.stack);
+            } else {
+              console.error("Error fetching periods: Unknown error", error);
+            }
             throw error; // Re-throw the error to handle it in the calling function
       
           }
@@ -107,7 +134,11 @@ const ReportPage = () => {
             // return data;
           } catch (error) {
             console.error("Error fetching periods:", error);
+          if (error instanceof Error) {
             console.error("Error fetching periods:", error.message, error.stack);
+          } else {
+            console.error("Error fetching periods: Unknown error", error);
+          }
             throw error; // Re-throw the error to handle it in the calling function
       
           }
@@ -248,7 +279,7 @@ const ReportPage = () => {
                     </div>
                     <div className="col-md-4 ">
                       <div>&nbsp;</div>
-                      <button className='btn btn-primary' onClick={()=> handleFetchPeriodsByDate(fromDate, toDate)}><i className="fa fa-spinner"></i>&nbsp;Load Period</button>
+                      <button className='btn btn-primary' onClick={()=> handleFetchPeriodsByDate(fromDate ?? "", toDate ?? "")}><i className="fa fa-spinner"></i>&nbsp;Load Period</button>
                     </div>
                   </div>
                   <div className="form-row">

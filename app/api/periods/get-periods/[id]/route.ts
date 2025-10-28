@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const token = req.headers.get("authorization")|| "";
     const periodId = req.nextUrl.searchParams.get("id");
-    const parsedPeriodId = parseInt(periodId)  
+    const parsedPeriodId = parseInt(periodId??"", 10);  
    
 
     if (!token) {

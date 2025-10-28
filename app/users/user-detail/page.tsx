@@ -11,12 +11,19 @@ import {useSearchParams} from "next/navigation";
 import formatDate from "../../../components/DateFormater";
 
 export default function UserInformationPage() {
-  const [activeTab, setActiveTab] = useState<"basic" | "roles">("basic");
-     const [user, setUser] = useLocalStorageObject("user", null);
+  type User = {
+    id: number;
+    firstName: string;
+    lastName: string;
+    emailAddress: string;
+    // add other properties as needed
+  };
+      const [user, setUser] = useLocalStorageObject<User | null>("user", null);
+      const [activeTab, setActiveTab] = useState<"basic" | "roles">("basic");
       const [token, setToken] = useLocalStorageObject("token", null);
       const [userName, setUserName] = useState("");
       const [symUser, setSymUser] = useState<any>({});
-      const [users, setUsers] = useState([])
+      const [users, setUsers] = useState<User[]>([])
 
       const searchParams = useSearchParams();
       const userId = searchParams.get("id");

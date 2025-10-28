@@ -5,12 +5,19 @@ import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import Header from '../../components/Header';
-import "../../public/assets/css/dataTables.bootstrap4.css" ;
-import 'bootstrap/dist/css/bootstrap.min.css'
+// import "../../public/assets/css/dataTables.bootstrap4.css" ;
+// import 'bootstrap/dist/css/bootstrap.min.css'
 import { useLocalStorageObject } from '../../hooks/useLocalStorage';
 
 const SystemAudit = () => {
-     const [user, setUser] = useLocalStorageObject("user", null);
+type User = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  emailAddress: string;
+  // add other properties as needed
+};
+       const [user, setUser] = useLocalStorageObject<User | null>("user", null);
       const [token, setToken] = useLocalStorageObject("token", null);
       const [userName, setUserName] = useState("");
   

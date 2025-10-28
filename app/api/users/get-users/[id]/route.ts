@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const token = req.headers.get("authorization");
     const userId = req.nextUrl.searchParams.get("id");
-    const parsedUserId = parseInt(userId);
+    const parsedUserId = parseInt(userId??"", 10);
     console.log("Parsed User ID:", parsedUserId);
 
     const apiRes = await fetch(`${API_BASE_URL}/api/v1/users/${parsedUserId}`, {

@@ -88,8 +88,8 @@ export default function LoginPage() {
     const secretKeyHex = process.env.NEXT_PUBLIC_SECRET_KEY ;
     const initiatorVectorHex = process.env.NEXT_PUBLIC_INITIATOR_VECTOR ;
 
-    const secretKeyBytes = hexToBytes(secretKeyHex);
-    const initiatorVectorBytes = hexToBytes(initiatorVectorHex);
+    const secretKeyBytes = hexToBytes(secretKeyHex ?? "");
+    const initiatorVectorBytes = hexToBytes(initiatorVectorHex ?? "");
 
     const decodedParam = decodeURIComponent(encryptedBase64);
     const cleanedBase64 = normalizeBase64(decodedParam);
@@ -131,7 +131,7 @@ export default function LoginPage() {
         setUserOnboardData(parsed);
 
 
-        if (!userOnboardData.IsPasswordCreationRequired) {
+        if (!userOnboardData?.IsPasswordCreationRequired) {
           router.push("/login");
           
         }
@@ -141,7 +141,7 @@ export default function LoginPage() {
         
       }
     }
-  }, [decrypted, router, userOnboardData.IsPasswordCreationRequired]);
+  }, [decrypted, router, userOnboardData?.IsPasswordCreationRequired]);
 
 
 

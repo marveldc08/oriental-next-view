@@ -8,20 +8,35 @@ import { useLocalStorageObject } from '../../../hooks/useLocalStorage';
 import router from 'next/router';
 import { toast } from 'react-toastify';
 
+type User = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  emailAddress: string;
+  // add other properties as needed
+};
+interface Period {
+  id: number;
+  name: string;
+}
+
 const ReportPage = () => {
-     const [user, setUser] = useLocalStorageObject("user", null);
+      const [user, setUser] = useLocalStorageObject<User | null>("user", null);
       const [token, setToken] = useLocalStorageObject("token", null);
       const [userName, setUserName] = useState("");
       const [showInitiateReportModal, setShowInitiateReportModal] = useState(false);
-      const [periods, setPeriods] = useState([]);
-  
+      const [periods, setPeriods] = useState<Period[]>([]);
+      
       useEffect(() => {
-        if (user) {
-          setUserName(`${user.firstName} ${user.lastName}`);
-        } else {
-          console.log("No user data found.");
-        }
-      }, [user]);
+          if (user) {
+            setUserName(`${user.firstName} ${user.lastName}`);
+          } else {
+            console.log("No user data found.");
+          }
+  
+         
+        }, [user]);
+        
 
        const getPeriods = useCallback(async () => {
           try {
@@ -43,7 +58,12 @@ const ReportPage = () => {
             return data;
           } catch (error) {
             console.error("Error fetching periods:", error);
-            console.error("Error fetching periods:", error.message, error.stack);
+           
+            if (error instanceof Error) {
+              console.error("Error fetching periods:", error.message, error.stack);
+            } else {
+              console.error("Error fetching periods: Unknown error", error);
+            }
             throw error; // Re-throw the error to handle it in the calling function
       
           }
