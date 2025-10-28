@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, ChangeEvent } from "react";
+import React, { useState, useEffect, useCallback, ChangeEvent, Suspense } from "react";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
 import Header from "../../../components/Header";
 import { useLocalStorageObject } from "../../../hooks/useLocalStorage";
 import { toast } from "react-toastify";
+
+
 
 // ✅ Define types outside the component (cleaner)
 type User = {
@@ -37,7 +39,15 @@ type Status = {
   name: string;
 };
 
-export default function UserManagementPage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UserManagementPage />
+    </Suspense>
+  );
+}
+
+ function UserManagementPage() {
   // ✅ Ensure proper typing for custom hook
   const [user] = useLocalStorageObject<User | null>("user", null);
   const [token] = useLocalStorageObject<string | null>("token", null);

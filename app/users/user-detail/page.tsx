@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 // @ts-ignore: allow CSS side-effect import without type declarations
 import "../../../public/assets/css/bootstrap.min.css";
 // import "@/public/assets/css/styles.css";
@@ -10,7 +10,16 @@ import { useLocalStorageObject } from "../../../hooks/useLocalStorage";
 import {useSearchParams} from "next/navigation";  
 import formatDate from "../../../components/DateFormater";
 
-export default function UserInformationPage() {
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UserInformationPage />
+    </Suspense>
+  );
+}
+
+function UserInformationPage() {
   type User = {
     id: number;
     firstName: string;
