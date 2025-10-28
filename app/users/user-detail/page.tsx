@@ -39,7 +39,7 @@ function UserInformationPage() {
 
       const rawDateCreated = symUser.dateCreated ? symUser.dateCreated : "";
       const rawFirstLoginDate = symUser.firstLoginDate ? symUser.firstLoginDate : "";
-      console.log("Raw Date Created:", rawFirstLoginDate);
+   
       const dateCreated = formatDate(rawDateCreated);
       const firstLoginDate = formatDate(rawFirstLoginDate);
 
@@ -86,8 +86,6 @@ function UserInformationPage() {
     
           const data = await response.json();
           
-          console.log(data)
-    
           return data;
         } catch (error) {
           console.log("Error fetching users:", error);
@@ -138,7 +136,7 @@ function UserInformationPage() {
           }
     
           const data = await response.json();
-          console.log("Fetched user data:", data);
+      
     
           return data;
         } catch (error) {
