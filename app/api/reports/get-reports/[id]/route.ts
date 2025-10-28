@@ -1,16 +1,24 @@
-// app/api/users/get-users/route.ts
+
+import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const token = req.headers.get("authorization");
-    const userId = req.nextUrl.searchParams.get("id");
-    const parsedUserId = parseInt(userId??"", 10);
-    console.log("Parsed User ID:", parsedUserId);
+    const token = req.headers.get("authorization")|| "";
+    const reportId = req.nextUrl.searchParams.get("id");
+    const parsedReportId = parseInt(reportId??"", 10);  
 
-    const apiRes = await fetch(`${API_BASE_URL}/api/v1/users/${parsedUserId}`, {
+    if (!token) {
+      return NextResponse.json({ message: "Authorization token is required" }, { status: 401 });
+    }
+
+    if (!reportId) {
+      return NextResponse.json({ message: "Report ID is required" }, { status: 400 });
+    }
+
+    const apiRes = await fetch(`${API_BASE_URL}/api/v1/reports/${parsedReportId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -31,3 +39,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
+

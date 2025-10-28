@@ -1,6 +1,77 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES2017",
+//     "lib": [
+//       "dom",
+//       "dom.iterable",
+//       "esnext"
+//     ],
+//     "allowJs": true,
+//     "skipLibCheck": true,
+//     "strict": false,
+//     "noEmit": true,
+//     "incremental": true,
+//     "module": "node16",
+//     "esModuleInterop": true,
+//     "moduleResolution": "node16",
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "jsx": "preserve",
+//     "baseUrl": ".",
+//     "paths": {
+//       "@/*": ["./*"]
+//     },
+//     "plugins": [
+//       {
+//         "name": "next"
+//       }
+//     ]
+//   },
+//   "include": [
+//     "next-env.d.ts",
+//     ".next/types/**/*.ts",
+//     "**/*.ts",
+//     "**/*.tsx"
+//   ],
+//   "exclude": [
+//     "node_modules"
+//   ]
+// }
+// {
+//   "compilerOptions": {
+//     "target": "es5",
+//     "lib": ["dom", "dom.iterable", "esnext"],
+//     "allowJs": true,
+//     "skipLibCheck": true,
+//     "strict": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "noEmit": true,
+//     "esModuleInterop": true,
+//     "module": "esnext",
+//     "moduleResolution": "bundler",
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "jsx": "preserve",
+//     "incremental": true,
+//     "baseUrl": ".",
+//     "paths": {
+//       "#/*": ["./*"]
+//     },
+//      "imports": {
+//     "#/*": "./*"
+//   }
+//   },
+//   "include": [
+//     "next-env.d.ts",
+//     "**/*.ts",
+//     "**/*.tsx",
+//     ".next/types/**/*.ts"
+//   ],
+//   "exclude": ["node_modules"]
+// }
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
@@ -8,16 +79,25 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true,
-    "module": "esnext",
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
-    "ignoreDeprecations": "6.0",
+    "jsx": "react-jsx",
+    "incremental": true,
+    // ✅ Temporary compatibility
+    // "ignoreDeprecations": "6.0",
+    // ✅ Works in TS6 (to be removed in TS7)
+    // "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
     "plugins": [
       {
         "name": "next"
@@ -26,11 +106,18 @@
   },
   "include": [
     "next-env.d.ts",
-    ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next\\dev/types/**/*.ts",
+    ".next\\dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
   ]
 }
+
+
+
+
+

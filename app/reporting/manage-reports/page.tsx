@@ -9,15 +9,39 @@ import router from 'next/router';
 import { toast } from 'react-toastify';
 import Loader from "../../../components/Loader";
 
+
+      interface Periods  {
+          id: number;
+          name: string;
+          description: string;
+          field: {id: number, name: string };
+          startDate: string;
+          endDate: string;
+          status: string;
+          dateCreated: string;
+          // add other properties if needed
+      };
 const ReportPage = () => {
-     const [user, setUser] = useLocalStorageObject("user", null);
+      type User = {
+        id: number;
+        firstName: string;
+        lastName: string;
+        emailAddress: string;
+        // add other properties as needed
+      };
+  
+     const [user, setUser] = useLocalStorageObject<User | null>("user", null);
       const [token, setToken] = useLocalStorageObject("token", null);
       const [userName, setUserName] = useState("");
       const [showInitiateReportModal, setShowInitiateReportModal] = useState(false);
-      const [periods, setPeriods] = useState([]);
+      const [periods, setPeriods] = useState<Periods[]>([]);
       const [fromDate, setFromDate] = useState<string | null>(null);
       const [toDate, setToDate] = useState<string | null>(null);
       const [loading, setLoading] = useState(false);
+      const [selectedPeriodId, setSelectedPeriodId] = useState<number | null>(null);
+      const [fieldId, setFieldId] = useState<number | null>(null);
+
+
   
       useEffect(() => {
         if (user) {
@@ -47,7 +71,12 @@ const ReportPage = () => {
             return data;
           } catch (error) {
             console.error("Error fetching periods:", error);
-            console.error("Error fetching periods:", error.message, error.stack);
+
+            if (error instanceof Error) {
+              console.error("Error fetching periods:", error.message, error.stack);
+            } else {
+              console.error("Error fetching periods: Unknown error", error);
+            }
             throw error; // Re-throw the error to handle it in the calling function
       
           }
@@ -76,18 +105,65 @@ const ReportPage = () => {
           
         }, [token, getPeriods]);
 
-        console.log("PERIODS DATA:", periods);
-
     const handlePeriodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedPeriod = e.target.value;
+      setSelectedPeriodId(periods.find(period => period.name === selectedPeriod)?.id ?? null);
+      setFieldId(periods.find(period => period.name === selectedPeriod)?.field.id ?? null);
+
       console.log("Selected Period:", selectedPeriod);
     };
 
+
+    function convertToFullTimestamp(dateStr: string): string {
+      if (!dateStr) throw new Error("Date string is empty");
+
+      let day: number, month: number, year: number;
+
+      // Detect common formats
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        // ✅ Format: YYYY-MM-DD (from <input type="date">)
+        const [y, m, d] = dateStr.split("-").map(Number);
+        year = y;
+        month = m;
+        day = d;
+      } else if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(dateStr)) {
+        // ✅ Format: DD/MM/YY or DD/MM/YYYY
+        const [d, m, y] = dateStr.split("/").map(Number);
+        year = y < 100 ? 2000 + y : y;
+        month = m;
+        day = d;
+      } else if (/^\d{1,2}-\d{1,2}-\d{2,4}$/.test(dateStr)) {
+        // ✅ Format: DD-MM-YY or DD-MM-YYYY
+        const [d, m, y] = dateStr.split("-").map(Number);
+        year = y < 100 ? 2000 + y : y;
+        month = m;
+        day = d;
+      } else {
+        throw new Error(`Unsupported date format: "${dateStr}"`);
+      }
+
+      const date = new Date(year, month - 1, day);
+
+      if (isNaN(date.getTime())) {
+        throw new Error(`Invalid date value after parsing: "${dateStr}"`);
+      }
+
+      const iso = date.toISOString().replace("Z", "");
+      const microseconds = (Math.random() * 1_000_0000).toFixed(6);
+      return `${iso.substring(0, 19)}.${microseconds}`;
+    }
+
+
+
     const handleFetchPeriodsByDate = async(fromDate:string , toDate:string) => {
       setLoading(true);
-      console.log("Fetching periods from", fromDate, "to", toDate);
+     
+      const convertedFromDate = convertToFullTimestamp(fromDate);
+      const convertedToDate = convertToFullTimestamp(toDate);
+      console.log("Converted From Date:", convertedFromDate);
+      console.log("Converted To Date:", convertedToDate);
        try {
-            const response = await fetch(`/api/periods/get-periods?startDate=${fromDate}&endDate=${toDate}`, {
+            const response = await fetch(`/api/periods/get-periods?startDate=${convertedFromDate}&endDate=${convertedToDate}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -107,14 +183,30 @@ const ReportPage = () => {
             // return data;
           } catch (error) {
             console.error("Error fetching periods:", error);
+          if (error instanceof Error) {
             console.error("Error fetching periods:", error.message, error.stack);
+          } else {
+            console.error("Error fetching periods: Unknown error", error);
+          }
             throw error; // Re-throw the error to handle it in the calling function
       
           }
     }
 
-    console.log("FROM DATE:", fromDate);
-    console.log("TO DATE:", toDate);
+    const handleInitiateReport = () => {
+      if (!selectedPeriodId || !fieldId) {
+        toast.error("Please select a valid period.");
+        return;
+      }
+      try {
+        
+      } catch (error) {
+        
+      }
+    }
+
+    console.log("PERIODS:", periods);
+  
 
 
         
@@ -123,7 +215,7 @@ const ReportPage = () => {
        {loading && <Loader/>}
         <Header pageName="Reporting" moduleName="Manage Reports" userName={userName} />
         {/* Page Header */}
-    <div className="row" style={{ width: "100%",padding: "20px"}}>
+    <div className="row" style={{ width: "100%", padding: "20px"}}>
       <div className="col-xl-12 col-ml-12 col-lg-12 mt-5">
         <div className="card border-left-primary">
           <div className="card-body">
@@ -246,9 +338,10 @@ const ReportPage = () => {
                      <input type="date" className='form-control' onChange={(e) => setToDate(e.target.value)}
                         value={toDate? toDate : ''} />
                     </div>
-                    <div className="col-md-4 ">
-                      <div>&nbsp;</div>
-                      <button className='btn btn-primary' onClick={()=> handleFetchPeriodsByDate(fromDate, toDate)}><i className="fa fa-spinner"></i>&nbsp;Load Period</button>
+                    <div className="col-md-4 mb-3 mt-4 d-flex">
+                    
+                      {/* <div>&nbsp;</div> */}
+                      <button type='button' className='btn btn-primary' onClick={()=> handleFetchPeriodsByDate(fromDate ?? "", toDate ?? "")}><i className="fa fa-spinner"></i>&nbsp;Load Period</button>
                     </div>
                   </div>
                   <div className="form-row">
@@ -258,7 +351,7 @@ const ReportPage = () => {
                         <option value="">Select Periods</option>
                         {periods.map((period) => (
                           <option key={period.id} value={period.name}>
-                            {period.name}
+                            {period.name} - {period.field.name}
                           </option>
                         ))}
                       </select>

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 // @ts-ignore: allow CSS side-effect import without type declarations
 import "../../../public/assets/css/bootstrap.min.css";
 // import "@/public/assets/css/styles.css";
@@ -10,26 +10,42 @@ import { useLocalStorageObject } from "../../../hooks/useLocalStorage";
 import {useSearchParams} from "next/navigation";  
 import formatDate from "../../../components/DateFormater";
 
-export default function UserInformationPage() {
-  const [activeTab, setActiveTab] = useState<"basic" | "roles">("basic");
-     const [user, setUser] = useLocalStorageObject("user", null);
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UserInformationPage />
+    </Suspense>
+  );
+}
+
+function UserInformationPage() {
+  type User = {
+    id: number;
+    firstName: string;
+    lastName: string;
+    emailAddress: string;
+    // add other properties as needed
+  };
+      const [user, setUser] = useLocalStorageObject<User | null>("user", null);
+      const [activeTab, setActiveTab] = useState<"basic" | "roles">("basic");
       const [token, setToken] = useLocalStorageObject("token", null);
       const [userName, setUserName] = useState("");
       const [symUser, setSymUser] = useState<any>({});
-      const [users, setUsers] = useState([])
+      const [users, setUsers] = useState<User[]>([])
 
       const searchParams = useSearchParams();
       const userId = searchParams.get("id");
 
       const rawDateCreated = symUser.dateCreated ? symUser.dateCreated : "";
       const rawFirstLoginDate = symUser.firstLoginDate ? symUser.firstLoginDate : "";
-      console.log("Raw Date Created:", rawFirstLoginDate);
+   
       const dateCreated = formatDate(rawDateCreated);
       const firstLoginDate = formatDate(rawFirstLoginDate);
 
       const getUser = useCallback(async () => {
         try {
-          const response = await fetch(`/api/users/get-users/${userId}`,{
+          const response = await fetch(`/api/users/get-users/${userId}?id=${userId}`,{
             method: "GET",
             headers:{
               "Content-Type": "application/json",
@@ -49,7 +65,7 @@ export default function UserInformationPage() {
         } catch (error) {
           console.log("Error fetching users:", error);
         }
-      }, [token]);
+      }, [token, userId]);
 
       const getUsers = useCallback(async () => {
         try {
@@ -70,8 +86,6 @@ export default function UserInformationPage() {
     
           const data = await response.json();
           
-          console.log(data)
-    
           return data;
         } catch (error) {
           console.log("Error fetching users:", error);
@@ -122,7 +136,7 @@ export default function UserInformationPage() {
           }
     
           const data = await response.json();
-          console.log("Fetched user data:", data);
+      
     
           return data;
         } catch (error) {

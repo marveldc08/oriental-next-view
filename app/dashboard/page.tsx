@@ -25,7 +25,15 @@ const xLabels = [
 ];
 
 export default function DashboardPage() {
-    const [user, setUser] = useLocalStorageObject("user", null);
+        type User = {
+          id: number;
+          firstName: string;
+          lastName: string;
+          emailAddress: string;
+          // add other properties as needed
+        };
+        const [user, setUser] = useLocalStorageObject<User | null>("user", null);
+  
     const [token, setToken] = useLocalStorageObject("token", null);
     const [userName, setUserName] = useState("");
 

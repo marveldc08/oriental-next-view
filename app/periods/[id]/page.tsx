@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
-import Header from "../../../components/Header";
+import Header from '../../../components/Header';
 import { useLocalStorageObject } from '../../../hooks/useLocalStorage';
 import router from 'next/router';
 import { toast } from 'react-toastify';
@@ -15,13 +15,14 @@ import Loader from '../../../components/Loader';
 
 
 const PeriodInformationPage = () => {
-       const [user, setUser] = useLocalStorageObject("user", null);
-        const [token, setToken] = useLocalStorageObject("token", null);
+       const [user, setUser] = useLocalStorageObject<any>("user", null);
+        const [token, setToken] = useLocalStorageObject<any>("token", null);
         const [userName, setUserName] = useState("");
       const [fetchedPeriod, setFetchedPeriod] = useState({} as any);
       const searchParams = useSearchParams();
       const periodId = searchParams.get("id");
-      const parsedPeriodId = JSON.parse(periodId)
+      // Safely parse periodId only when it's a non-null string
+      const parsedPeriodId = periodId ? JSON.parse(periodId) : null;
 
       const [showUpdateModal, setShowUpdateModal] = useState(false);
       const [showAddActivityModal, setShowAddActivityModal] = useState(false);
@@ -42,11 +43,19 @@ const PeriodInformationPage = () => {
 
       // const [taskUpdate, setTaskUpdate] = useState("");
 
-      const [tasks, setTasks]= useState([])
+      interface Task {
+        id: number;
+        name: string;
+        description: string;
+        status: string;
+        dueDate: string;
+      }
+
+      const [tasks, setTasks] = useState<Task[]>([])
 
       const getPeriod = useCallback(async () => {
         try {
-          const response = await fetch(`/api/periods/get-periods/${parsedPeriodId}`, {
+          const response = await fetch(`/api/periods/get-periods/${parsedPeriodId}?id=${parsedPeriodId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -63,12 +72,16 @@ const PeriodInformationPage = () => {
     
           return data;
         } catch (error) {
-          console.error("Error fetching period:", error);
-          console.error("Error fetching period:", error.message, error.stack);
-          throw error; // Re-throw the error to handle it in the calling function
-    
-        }
-      }, [token]);
+            console.error("Error fetching period:", error);
+            if (error instanceof Error) {
+              console.error("Error fetching period:", error.message, error.stack);
+            } else {
+              console.error("Error fetching period: Unknown error", error);
+            }
+            throw error; // Re-throw the error to handle it in the calling function
+      
+          }
+      }, [parsedPeriodId, token]);
 
       const getTasks = useCallback(async () => {
         try {
@@ -90,9 +103,12 @@ const PeriodInformationPage = () => {
           return data;
         } catch (error) {
           console.error("Error fetching tasks:", error);
-          console.error("Error fetching tasks:", error.message, error.stack);
-          throw error; 
-
+          if (error instanceof Error) {
+            console.error("Error fetching tasks:", error.message, error.stack);
+          } else {
+            console.error("Error fetching tasks: Unknown error", error);
+          }
+          throw error;
         }
       }, [token]);
 
@@ -196,7 +212,7 @@ const PeriodInformationPage = () => {
 
     useEffect(() => {
       if (user) {
-        setUserName(`${user.firstName} ${user.lastName}`);
+        setUserName(`${(user as any).firstName ?? ''} ${(user as any).lastName ?? ''}`.trim());
       } else {
         console.log("No user data found.");
         router.push("/login");
@@ -272,7 +288,7 @@ const PeriodInformationPage = () => {
 
     const handleCancelPeriod = async () => {
       setLoading(true);
-     
+     console.log("CANCEL PERIOD ID", parsedPeriodId);
       try {
         const response = await fetch(`/api/periods/cancel-period/${parsedPeriodId}?id=${parsedPeriodId}`, {
           method: 'POST',
@@ -307,7 +323,6 @@ const PeriodInformationPage = () => {
       String(now.getMonth() + 1).padStart(2, '0')
     }/${now.getFullYear()}`;
 
-    console.log("FORMATED DATE",formattedDate); // e.g. "2025/10/22"
     console.log("FETCHED PERIOD:", fetchedPeriod);
 
 

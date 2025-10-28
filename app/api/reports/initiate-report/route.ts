@@ -1,21 +1,22 @@
-// app/api/users/get-users/route.ts
+// app/api/reports/initiate-report/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const { fieldId, periodId } = body;
 
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const token = req.headers.get("authorization");
-    const userId = req.nextUrl.searchParams.get("id");
-    const parsedUserId = parseInt(userId??"", 10);
-    console.log("Parsed User ID:", parsedUserId);
+    const token = req.headers.get("authorization") || "";
 
-    const apiRes = await fetch(`${API_BASE_URL}/api/v1/users/${parsedUserId}`, {
-      method: "GET",
+    const apiRes = await fetch(`${API_BASE_URL}/api/v1/reports`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ?? "",
+        "authorization": token
       },
+      body: JSON.stringify({ fieldId, periodId }),
     });
 
     const contentType = apiRes.headers.get("content-type");

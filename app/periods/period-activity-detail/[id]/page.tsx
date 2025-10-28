@@ -18,18 +18,33 @@ const ActivityInformation = () => {
 
       const searchParams = useSearchParams();
       const taskId = searchParams.get("id");
-      const parsedTaskId = JSON.parse(taskId)
+      const parsedTaskId = taskId ? JSON.parse(taskId) : null;
   
       const [loading, setLoading] = useState(false);
-      const [user, setUser] = useLocalStorageObject("user", null);
-      const [users, setUsers] = useState([]);
+      type User = {
+        id: number;
+        firstName: string;
+        lastName: string;
+        emailAddress: string;
+        // add other properties as needed
+      };
+      const [user, setUser] = useLocalStorageObject<User | null>("user", null);
+      const [users, setUsers] = useState<User[]>([]);
       const [token, setToken] = useLocalStorageObject("token", null);
       const [userName, setUserName] = useState("");
       const [fetchedTask, setFetchedTask] = useState({} as any);
-      const [taskUsers, setTaskUsers] = useState([])
-      const [taskUsersCategories, setTaskUsersCategories] = useState([])
-      const [fetchedTaskMilestones, setFetchedTaskMilestones] = useState([])
-      const [milestoneStatuses, setMilestoneStatuses] = useState([])
+      type TaskUser = {
+        id: number;
+        user: User;
+        task: { name: string };
+        userCategory: { name: string };
+      };
+      const [taskUsers, setTaskUsers] = useState<TaskUser[]>([])
+      type UserCategory = { id: number; name: string };
+      const [taskUsersCategories, setTaskUsersCategories] = useState<UserCategory[]>([])
+      const [fetchedTaskMilestones, setFetchedTaskMilestones] = useState<any[]>([])
+      type MilestoneStatus = { id: number; name: string };
+      const [milestoneStatuses, setMilestoneStatuses] = useState<MilestoneStatus[]>([])
 
 
       const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -53,21 +68,29 @@ const ActivityInformation = () => {
       const [milestoneSubject, setMilestoneSubject] = useState("")
       const [selectedMilestoneSubjects, setSelectedMilestoneSubjects] = useState<{subject: string}[]>([]);
       const [milestoneToBeDeleted, setMilestoneToBeDeleted] = useState(null)
-      const [milestoneStatusId, setMilestoneStatusId] = useState(null)
+      const [milestoneStatusId, setMilestoneStatusId] = useState<number | null>(null)
 
 
       const [removalReason, setRemovalReason] = useState("");
-      const [userToBeRemoved, setUserToBeRemoved] = useState(null)
+      const [userToBeRemoved, setUserToBeRemoved] = useState<TaskUser | null>(null)
 
       const [showAddCommentModal, setShowAddCommentModal] = useState(false);
       const [showUpdateCommentModal, setShowUpdateCommentModal] = useState(false);
-      const [commentIdToBeUpdated, setCommentIdToBeUpdated] = useState(null);
+      const [commentIdToBeUpdated, setCommentIdToBeUpdated] = useState<number | null>(null);
       const [comments, setComments] = useState("");
-      const [taskComments, setTaskComments] = useState([])
+      const [taskComments, setTaskComments] = useState<any[]>([])
 
-      const [selectedUser, setSelectedUser] = useState(null);
-      const [selectedUsers, setSelectedUsers] = useState([]);
-      const [selectedCategory, setSelectedCategory] = useState(null);
+      const [selectedUser, setSelectedUser] = useState<User | null>(null);
+      type SelectedUser = {
+        userId: number;
+        userFirstName: string;
+        userLastName: string;
+        userEmail: string;
+        categoryId: number;
+        categoryName: string;
+      };
+      const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
+      const [selectedCategory, setSelectedCategory] = useState<UserCategory | null>(null);
       const [showAssignUserModal, setShowAssignUserModal] = useState(false);
 
 
@@ -77,8 +100,6 @@ const ActivityInformation = () => {
         } else {
           console.log("No user data found.");
         }
-
-       
       }, [user]);
       
 
@@ -148,15 +169,20 @@ const ActivityInformation = () => {
           return data;
         } catch (error) {
           console.error("Error fetching milestone statuses:", error);
-          console.error("Error fetching milestone statuses:", error.message, error.stack);
+         
+          if (error instanceof Error) {
+            console.error("Error fetching milestone statuses:", error.message, error.stack);
+          } else {
+            console.error("Error fetching milestone statuses: Unknown error", error);
+          }
           throw error; // Re-throw the error to handle it in the calling function
     
         }
-      }, [parsedTaskId, token]);
+      }, [ token]);
 
       const getTask = useCallback(async () => {
         try {
-          const response = await fetch(`/api/periods/tasks/get-period-task?id=${parsedTaskId}`, {
+          const response = await fetch(`/api/periods/tasks/get-period-task/${parsedTaskId}?id=${parsedTaskId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -173,11 +199,15 @@ const ActivityInformation = () => {
     
           return data;
         } catch (error) {
-          console.error("Error fetching task:", error);
-          console.error("Error fetching task:", error.message, error.stack);
-          throw error; // Re-throw the error to handle it in the calling function
-    
-        }
+            console.error("Error fetching task:", error);
+            if (error instanceof Error) {
+              console.error("Error fetching task:", error.message, error.stack);
+            } else {
+              console.error("Error fetching task: Unknown error", error);
+            }
+            throw error; // Re-throw the error to handle it in the calling function
+      
+          }
       }, [parsedTaskId, token]);
 
       const getTaskUsers = useCallback(async () => {
@@ -200,11 +230,15 @@ const ActivityInformation = () => {
           return data;
         } catch (error) {
           console.error("Error fetching task users:", error);
-          console.error("Error fetching task users:", error.message, error.stack);
+          if (error instanceof Error) {
+            console.error("Error fetching task users:", error.message, error.stack);
+          } else {
+            console.error("Error fetching task users: Unknown error", error);
+          }
           throw error; // Re-throw the error to handle it in the calling function
-    
+
         }
-      }, [token]);
+      }, [parsedTaskId, token]);
 
       const getTaskComments = useCallback(async () => {
         try {
@@ -226,11 +260,15 @@ const ActivityInformation = () => {
           return data;
         } catch (error) {
           console.error("Error fetching task comments:", error);
-          console.error("Error fetching task comments:", error.message, error.stack);
+          if (error instanceof Error) {
+            console.error("Error fetching task comments:", error.message, error.stack);
+          } else {
+            console.error("Error fetching task comments: Unknown error", error);
+          }
           throw error; // Re-throw the error to handle it in the calling function
-    
+
         }
-      }, [token]);
+      }, [parsedTaskId, token]);
 
       const getTaskMilestones = useCallback(async () => {
         try {
@@ -252,9 +290,13 @@ const ActivityInformation = () => {
           return data;
         } catch (error) {
           console.error("Error fetching task:", error);
-          console.error("Error fetching task:", error.message, error.stack);
+          if (error instanceof Error) {
+            console.error("Error fetching task:", error.message, error.stack);
+          } else {
+            console.error("Error fetching task: Unknown error", error);
+          }
           throw error; // Re-throw the error to handle it in the calling function
-    
+
         }
       }, [parsedTaskId, token]);
 
@@ -287,8 +329,8 @@ const ActivityInformation = () => {
         const fetchTask = async () => {
           try {
             const taskData = await getTask();
-       
-            setFetchedTask(taskData.data[0]);
+            console.log("TASK DATA", taskData.data)
+            setFetchedTask(taskData.data);
 
           } catch (error) {
             console.error("Error fetching task:", error);
@@ -420,20 +462,28 @@ const ActivityInformation = () => {
 
     const handleUserChange = (e: React.ChangeEvent<HTMLElement>) => {
       const selectedUserName = (e.target as HTMLSelectElement).value;
-      const selectedUser = users.find(user => user.firstName === selectedUserName);
+      const selectedUser = users.find(user => user.firstName === selectedUserName) || null;
       setSelectedUser(selectedUser);
     };
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedCategoryName = e.target.value;
       const selectedCategory = taskUsersCategories.find(category => category.name === selectedCategoryName);
-      setSelectedCategory(selectedCategory);
+      if (selectedCategory) {
+        setSelectedCategory(selectedCategory);
+      } else {
+        setSelectedCategory(null);
+      }
     };
     const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedStatusId = e.target.value;
       const pasrsedSelectedStatusId = parseInt(selectedStatusId)
        console.log("Selected Status Id",pasrsedSelectedStatusId)
       const selectedMilestoneStatusId = milestoneStatuses.find(status => status.id === pasrsedSelectedStatusId);
-      setMilestoneStatusId(selectedMilestoneStatusId.id);
+      if (selectedMilestoneStatusId) {
+        setMilestoneStatusId(selectedMilestoneStatusId.id);
+      } else {
+        setMilestoneStatusId(null);
+      }
     };
 
     const handleCompileSelectedUsers = () => {
@@ -470,13 +520,13 @@ const ActivityInformation = () => {
 
       try {
 
-        const response = await fetch( selectedUser.length == 0 ? singleUrl : multiUrl, {
+        const response = await fetch( selectedUsers.length === 0 ? singleUrl : multiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify(selectedUser.length == 0 ? {userId, userCategoryId} : [{userId, userCategoryId}] ),
+          body: JSON.stringify(selectedUsers.length === 0 ? {userId, userCategoryId} : [{userId, userCategoryId}] ),
         });
        
         if (!response.ok) {
@@ -500,7 +550,7 @@ const ActivityInformation = () => {
 
 
     const handleSelectDeleteUser = (userId: number) => {
-      const selectedUser = taskUsers.find(user => user.id === userId);
+      const selectedUser = taskUsers.find(user => user.id === userId) || null;
       setUserToBeRemoved(selectedUser);
     };
     const handleDeleteTaskUser = async (userId: number, deleteReason: string) => {
@@ -622,9 +672,12 @@ const ActivityInformation = () => {
           return data;
         } catch (error) {
           console.error("Error fetching task:", error);
-          console.error("Error fetching task:", error.message, error.stack);
+          if (error instanceof Error) {
+            console.error("Error fetching task:", error.message, error.stack);
+          } else {
+            console.error("Error fetching task: Unknown error", error);
+          }
           throw error; // Re-throw the error to handle it in the calling function
-    
         }
     }
 
@@ -880,7 +933,7 @@ const ActivityInformation = () => {
                                       }}
                                     >
                                       {/* <Typography sx={{ p: 2 }}>The content of the Popover.</Typography> */}
-                                      <span><a className="btn btn-outline-danger" onClick={() => { setShowDeleteUserModal(true); handleSelectDeleteUser(user.id); setUserToBeRemoved(taskUser.user) }} data-toggle="modal" data-target="#deleteUserModal"><i className="fa fa-remove">&nbsp; Remove</i></a></span>
+                                      <span><a className="btn btn-outline-danger" onClick={() => { setShowDeleteUserModal(true); handleSelectDeleteUser(taskUser.id); setUserToBeRemoved(taskUser) }} data-toggle="modal" data-target="#deleteUserModal"><i className="fa fa-remove">&nbsp; Remove</i></a></span>
                                     </Popover>
                                   </div>
                                 )}
@@ -932,7 +985,7 @@ const ActivityInformation = () => {
                                 {milestone.status}
                               </span>
                             </td>
-                            <td>{milestone.dateCreated}</td>
+                            <td><TimeAgo timestamp={milestone.dateCreated}/></td>
                             <td>
                               <PopupState
                                 variant="popover"
@@ -1040,7 +1093,7 @@ const ActivityInformation = () => {
                         <div key={id} className="list-group-item list-group-item-action flex-column align-items-start">
                           <div className="d-flex w-100 justify-content-between">
                             <h6 className="mb-1 text-primary" style={{ fontSize: "12px" }}>{comment.user.firstName }  {comment.user.lastName}</h6>
-                            <small>{comment? TimeAgo(comment.dateCommented) : ""}</small>
+                            <small><TimeAgo timestamp={comment.dateCommented} /></small>
                           </div>
                           <h6 style={{ fontSize: "12px", marginTop: "4px" }}><b>Task Name:</b> {comment.task.name}</h6>
                           <p className="mb-1 font-14">{comment.comment}</p>
@@ -1243,7 +1296,7 @@ const ActivityInformation = () => {
                         type="text"
                         className="form-control"
                         placeholder="User Email Address"
-                        value={userToBeRemoved ? userToBeRemoved.emailAddress : ""}
+                        value={userToBeRemoved ? userToBeRemoved.user.emailAddress : ""}
                         disabled
                       />
                     </div>
@@ -1266,7 +1319,7 @@ const ActivityInformation = () => {
                 <button
                   type="submit"
                   className="btn btn-danger btn-block"
-                  onClick={() => handleDeleteTaskUser(userToBeRemoved.id, removalReason)}
+                  onClick={() => userToBeRemoved && handleDeleteTaskUser(userToBeRemoved.id, removalReason)}
                 >
                   <i className="fa fa-remove"></i>&nbsp;Remove User
                 </button>
@@ -1388,7 +1441,7 @@ const ActivityInformation = () => {
                 <button
                   type="submit"
                   className="btn btn-danger btn-block"
-                  onClick={() => handleDeleteMilestone(milestoneToBeDeleted)}
+                  onClick={() => milestoneToBeDeleted && handleDeleteMilestone(milestoneToBeDeleted)}
                 >
                   <i className="fa fa-remove"></i>&nbsp; Yes Remove Milestone
                 </button>
@@ -1550,8 +1603,14 @@ const ActivityInformation = () => {
                 <button
                   type="submit"
                   className="btn btn-primary btn-block w-100"
-                  disabled={loading}
-                  onClick={() => handleUpdateMilestone( milestoneStatusId, selectedMilestoneId)}
+                  disabled={loading || milestoneStatusId == null || selectedMilestoneId == null}
+                  onClick={() => {
+                    if (milestoneStatusId == null || selectedMilestoneId == null) {
+                      toast.error("Please select a status before updating the milestone");
+                      return;
+                    }
+                    handleUpdateMilestone(milestoneStatusId, selectedMilestoneId);
+                  }}
                 >
                   <i className="fa fa-pencil"></i>&nbsp; {loading ? "Updating..." : "Update Milestone"}
                 </button>
@@ -1700,7 +1759,13 @@ const ActivityInformation = () => {
                 <button
                   type="submit"
                   className="btn btn-primary btn-block"
-                  onClick={() => {handleComment(user.id, comments)}}
+                  onClick={() => {
+                    if (!user || user.id == null) {
+                      toast.error("User not found. Please login again.");
+                      return;
+                    }
+                    handleComment(user.id, comments);
+                  }}
                 >
                   <i className="fa fa-comments"></i>&nbsp;Leave Comment
                 </button>
@@ -1742,22 +1807,27 @@ const ActivityInformation = () => {
                         onChange={(e) => setComments(e.target.value)}
                         value={comments? comments: ""}
                       ></textarea>
-
                     </div>
-
                   </div>
-
                 </form>
               </div>
+
               <div className="modal-footer">
                 <button
                   type="submit"
                   className="btn btn-warning btn-block"
-                  onClick={() => {handleUpdateComment(user.id, comments)}}
+                  onClick={() => {
+                    if (!user || user.id == null) {
+                      toast.error("User not found. Please login again.");
+                      return;
+                    }
+                    handleUpdateComment(user.id, comments);
+                  }}
                 >
                   <i className="fa fa-comments"></i>&nbsp;Update Comment
                 </button>
               </div>
+  
             </div>
           </div>
         </div>

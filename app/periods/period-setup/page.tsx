@@ -14,7 +14,8 @@ import router from "next/router";
 
 export default function PeriodManagementPage() {
   const [showModal, setShowModal] = useState(false);
-  const [user, setUser] = useLocalStorageObject("user", null);
+  type User = { firstName: string; lastName: string; [key: string]: any };
+  const [user, setUser] = useLocalStorageObject<User | null>("user", null);
   const [token, setToken] = useLocalStorageObject("token", null);
   const [userName, setUserName] = useState("");
 
@@ -25,9 +26,20 @@ export default function PeriodManagementPage() {
   const [startDate, setStartDate] = useState('')
   const [expectedEndDate, setExpectedEndDate] = useState('')
   const [loading, setLoading] = useState(false)
-  const [periods, setPeriods] = useState([]);
+  type Period = {
+    id: number;
+    name: string;
+    description: string;
+    field: { name: string };
+    startDate: string;
+    endDate: string;
+    status: string;
+    dateCreated: string;
+    // add other properties if needed
+  };
+  const [periods, setPeriods] = useState<Period[]>([]);
   const [periodId, setPeriodId] = useState<number | null>(null);
-  const [fields, setFields] = useLocalStorageObject("fields", null);
+  const [fields, setFields] = useLocalStorageObject<Array<{ id: number; name: string }>>("fields", []);
   const [selectedField, setSelectedField] = useState(null);
 
   const getFields = useCallback( async () => {
@@ -46,14 +58,12 @@ export default function PeriodManagementPage() {
     const data = await response.json();
     if (response.ok) {
       setFields(data.data ?? null);
-    } else {
-      
     }
     return data
   } catch (error) {
     console.error("error Fetching fields:", error);
   }
-}, [token]);
+}, [setFields, token]);
 
   useEffect(() => {
     if (!token) {
@@ -70,7 +80,7 @@ export default function PeriodManagementPage() {
 
     fetchFields();
 
-  }, [token, getFields]);
+  }, [token, getFields, setFields]);
 
 
   const getPeriods = useCallback(async () => {
@@ -93,7 +103,11 @@ export default function PeriodManagementPage() {
       return data;
     } catch (error) {
       console.error("Error fetching periods:", error);
-      console.error("Error fetching periods:", error.message, error.stack);
+      if (error instanceof Error) {
+        console.error("Error fetching periods:", error.message, error.stack);
+      } else {
+        console.error("Error fetching periods:", error);
+      }
       throw error; // Re-throw the error to handle it in the calling function
 
     }
@@ -148,7 +162,7 @@ export default function PeriodManagementPage() {
       return;
     }
     try {
-      const fieldId = fields.length > 0 ? fields[0].id : null; 
+      const fieldId = Array.isArray(fields) && fields.length > 0 ? fields[0].id : null; 
       const response = await fetch('/api/periods/create-period', {
         method: "POST",
         headers: {
@@ -385,7 +399,7 @@ export default function PeriodManagementPage() {
                         type="text"
                         className="form-control"
                         placeholder="Name or Title of Period"
-                        value={fields[0].name}
+                        value={Array.isArray(fields) && fields.length > 0 ? fields[0].name : ""}
                         readOnly
                       />
                     </div>
