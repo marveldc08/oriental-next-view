@@ -90,9 +90,9 @@
     "jsx": "react-jsx",
     "incremental": true,
     // ✅ Temporary compatibility
-    "ignoreDeprecations": "6.0",
+    // "ignoreDeprecations": "6.0",
     // ✅ Works in TS6 (to be removed in TS7)
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
@@ -116,3 +116,8 @@
     "node_modules"
   ]
 }
+
+
+
+
+
