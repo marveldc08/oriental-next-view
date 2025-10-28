@@ -45,12 +45,9 @@
 // app/api/periods/cancel-period/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(
-  req: NextRequest,
-  context: { params: { id: number } }
-) {
+export async function POST(req: NextRequest) {
   try {
-    const { params } = context;
+
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const token = req.headers.get("authorization") || "";
 
