@@ -272,7 +272,7 @@ const PeriodInformationPage = () => {
 
     const handleCancelPeriod = async () => {
       setLoading(true);
-     
+     console.log("CANCEL PERIOD ID", parsedPeriodId);
       try {
         const response = await fetch(`/api/periods/cancel-period/${parsedPeriodId}?id=${parsedPeriodId}`, {
           method: 'POST',
@@ -307,7 +307,6 @@ const PeriodInformationPage = () => {
       String(now.getMonth() + 1).padStart(2, '0')
     }/${now.getFullYear()}`;
 
-    console.log("FORMATED DATE",formattedDate); // e.g. "2025/10/22"
     console.log("FETCHED PERIOD:", fetchedPeriod);
 
 

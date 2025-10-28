@@ -47,7 +47,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { id: number } }
 ) {
   try {
     const { params } = context;
@@ -55,8 +55,9 @@ export async function POST(
     const token = req.headers.get("authorization") || "";
 
     // Prefer dynamic route param, fallback to query param
-    const periodId = params.id || req.nextUrl.searchParams.get("id");
+    const periodId =  req.nextUrl.searchParams.get("id");
     const parsedPeriodId = periodId ? parseInt(periodId, 10) : null;
+    console.log("Parsed Period ID AAAA:", parsedPeriodId);
 
     if (!token) {
       return NextResponse.json(
