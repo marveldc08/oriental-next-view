@@ -3016,3 +3016,12 @@ body
         margin-left: -3% !important;
     }
 }
+@media (max-width: 1280px) and (min-width: 1024px) {
+    .sidebar-menu {
+        width: 20% !important; 
+    }
+    .page-container {
+        width: -80% !important;
+        margin-left: 20% !important;
+    }
+}
