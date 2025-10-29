@@ -32,7 +32,7 @@ export default function Header({ pageName, moduleName, userName }: { pageName: s
   };
 
   return (
-    <div>
+    <div >
       {/* {loading && <Loader />} */}
       {/* Sidebar */}
       <div className={`sidebar-menu ${sidebarOpen ? '' : 'collapsed'}`}>
@@ -41,7 +41,7 @@ export default function Header({ pageName, moduleName, userName }: { pageName: s
             <Link href="/"><Image src="/assets/images/icon/logo.png" alt="logo" width={150} height={50} /></Link>
           </div>
         </div>
-        <div className="main-menu">
+        <div className="main-menu ">
           <div className="menu-inner">
             <nav>
               <ul className="metismenu" id="menu" ref={menuRef}>
@@ -134,8 +134,8 @@ export default function Header({ pageName, moduleName, userName }: { pageName: s
               <span></span>
               <span></span>
               <span></span>
-            </div> */}
-            <div className="search-box pull-left"></div>
+            </div>
+            <div className="search-box pull-left"></div> */}
           </div>
           <div className="col-md-6 col-sm-4 clearfix">
             <ul className="notification-area pull-right">

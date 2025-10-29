@@ -55,7 +55,8 @@
 /*------------------------- 1. Core Css -------------------*/
 
 .page-container {
-    width: 100%;
+    width: -85%;
+    /* margin-left: 15% !important; */
     height: auto;
     min-height: auto;
     padding-left: 280px;
@@ -165,7 +166,7 @@
     top: 0;
     z-index: 99;
     height: 100vh;
-    width: 280px;
+    width: 15%;
     overflow: hidden;
     background: #303641;
     box-shadow: 2px 0 32px rgba(0, 0, 0, 0.05);
@@ -180,6 +181,8 @@
 .sbar_collapsed .sidebar-menu {
     left: -280px;
 }
+
+
 
 .main-menu {
     height: calc(100% - 100px);
@@ -2976,3 +2979,40 @@ body
 }
 
 /*-------------------- END Offset Sidebar ------------------- */
+
+@media (max-width: 1439px) and (min-width: 992px) {
+    .sidebar-menu {
+        width: 20% !important;
+    }
+    .page-container {
+        width: -80% !important;
+        margin-left: 20% !important;
+    }
+}
+@media (max-width: 991px) {
+    .sidebar-menu {
+        width: 20% !important; 
+    }
+    .page-container {
+        width: -80% !important;
+        margin-left: 20% !important;
+    }
+}
+@media (max-width: 1439px) and (min-width: 1024px) {
+    .sidebar-menu {
+        width: 15% !important; 
+    }
+    .page-container {
+        width: -85% !important;
+        margin-left: 15% !important;
+    }
+}
+@media (max-width: 1450px) and (min-width: 1035px) {
+    .sidebar-menu {
+        width: 15% !important; 
+    }
+    .page-container {
+        width: -85% !important;
+        margin-left: -3% !important;
+    }
+}
