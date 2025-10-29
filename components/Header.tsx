@@ -130,11 +130,11 @@ export default function Header({ pageName, moduleName, userName }: { pageName: s
       <div className="header-area">
         <div className="row align-items-center">
           <div className="col-md-6 col-sm-8 clearfix">
-            <div className="nav-btn pull-left" onClick={toggleSidebar} style={{ cursor: "pointer" }}>
+            {/* <div className="nav-btn pull-left" onClick={toggleSidebar} style={{ cursor: "pointer" }}>
               <span></span>
               <span></span>
               <span></span>
-            </div>
+            </div> */}
             <div className="search-box pull-left"></div>
           </div>
           <div className="col-md-6 col-sm-4 clearfix">
