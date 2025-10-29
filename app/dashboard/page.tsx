@@ -49,7 +49,7 @@ export default function DashboardPage() {
   
   return (
     <div className='page-container'>
-      <Header pageName="Dashboard" moduleName="Dashboard"  userName={userName} />
+      <Header  pageName="Dashboard" moduleName="Dashboard"  userName={userName} />
       <div id="wrapper" >
         <div id="content-wrapper" className="d-flex flex-column">
           <div id="content">
